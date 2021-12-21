@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: hamlet-unencrypted
+  labels:
+    app: hamlet-unencrypted
+spec:
+  clusterIP: None
+  selector:
+    app: hamlet-unencrypted
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  labels:
+    app: hamlet-unencrypted
+  name: hamlet-unencrypted
+spec:
+  replicas: 1
+  serviceName: hamlet-unencrypted
+  selector:
+    matchLabels:
+      app: hamlet-unencrypted
+  template:
+    metadata:
+      labels:
+        app: hamlet-unencrypted
+    spec:
+      containers:
+      - image: debian:9-slim
+        name: hamlet
+        command: [ "sh", "-c", "echo 'My words fly up, my thoughts remain below; Words without thoughts never to heaven go' > /mnt/hamlet.txt && sleep 3600"]
+        volumeMounts:
+        - mountPath: /mnt
+          name: unencrypted-volume
+  volumeClaimTemplates:
+  - metadata:
+      name: unencrypted-volume
+      labels:
+        env: dev
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: ondat-replicated
+      resources:
+        requests:
+          storage: 1Gi
