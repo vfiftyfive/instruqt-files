@@ -26,6 +26,7 @@ spec:
       labels:
         app: hamlet-unencrypted
     spec:
+      nodeName: ondat-worker2
       containers:
       - image: debian:9-slim
         name: hamlet
