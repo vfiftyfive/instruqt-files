@@ -1,10 +1,23 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb-standalone
+  labels:
+    app: mongo
+spec:
+  clusterIP: None
+  selector:
+    app: mongo
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: mongodb-standalone
+  labels:
+    app: mongo
 spec:
   serviceName: mongo
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: mongo
